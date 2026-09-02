@@ -72,6 +72,7 @@ Commit and push with plain git. Run `sh scripts/check.sh` before pushing.
 - **The shell config is a baseline, not a mirror of any machine.** It only references tools `packages.yaml` installs.
 - **Nothing personal is committed.** No email, no secrets. `check.sh` greps for an email address.
 - **Work laptops never get personal software or settings.** A missing or misspelled `profile` aborts rather than falling back to a default.
+- **Company-managed apps stay out of `packages.yaml`.** If Munki (Managed Software Center) installs Slack, Docker or Zoom, Homebrew must not also manage them. The `work` section is only for tools the company doesn't provide.
 - **Removed files linger.** chezmoi stops managing a deleted file but does not remove it from `~`. Clean up by hand on existing machines.
 
 ## Testing

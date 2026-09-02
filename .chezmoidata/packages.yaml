@@ -101,6 +101,9 @@ packages:
     # work — the work laptop only. Employer-specific tooling goes here.
     ###########################################################################
     work:
+      # Anything Munki (Managed Software Center) already installs (Slack, Docker,
+      # Zoom, browsers, VPN clients) stays OUT of this list. Two managers
+      # updating the same app fight, and the company's one wins.
       taps: []
       brews:
         - imageoptim-cli
@@ -108,10 +111,8 @@ packages:
         - gifski
       casks:
         - imageoptim
-        - slack
         - cursor
         - figma
-        # - zoom
 
 # Not installable via Homebrew — install by hand on a new machine if wanted:
 #   Xcode (App Store), cmux, Screen Studio, VoiceInk, Discord, Sublime Text
