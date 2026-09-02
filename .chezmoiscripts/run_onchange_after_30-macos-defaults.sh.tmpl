@@ -104,6 +104,17 @@ defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 
 ###############################################################################
+# Liquid Glass (macOS 26 Tahoe and later; no-ops on older releases)
+###############################################################################
+
+if [ "$(sw_vers -productVersion | cut -d. -f1)" -ge 26 ]; then
+	# Sidebars are solid panels, not floating glass over the content.
+	defaults write NSGlobalDomain NSSplitViewItemSidebarDefaultsToFloatingAppearance -bool false
+	# Tone down the glass blur (default is much stronger).
+	defaults write NSGlobalDomain NSConvolutionOverride1 -float 14
+fi
+
+###############################################################################
 # Menu bar
 ###############################################################################
 
