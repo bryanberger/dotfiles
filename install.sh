@@ -53,7 +53,19 @@ else
 	printf '\n'
 fi
 
-# --- 2. Homebrew --------------------------------------------------------------
+# --- 2. sudo ------------------------------------------------------------------
+# Homebrew's installer (run non-interactively below) and some cask pkg
+# installers need sudo but never prompt for it themselves. Ask once here, then
+# keep the ticket alive until this script exits. sudo reads the password from
+# the terminal directly, so this works under `curl | sh` too.
+log "Asking for your password once; Homebrew and some installers need sudo"
+if ! sudo -v; then
+	echo "This account needs to be an Administrator to install Homebrew." >&2
+	exit 1
+fi
+( while kill -0 "$$" 2>/dev/null; do sudo -n true 2>/dev/null; sleep 50; done ) &
+
+# --- 3. Homebrew --------------------------------------------------------------
 BREW=/opt/homebrew/bin/brew
 if [ -x "$BREW" ]; then
 	log "Homebrew already installed"
@@ -64,7 +76,7 @@ else
 fi
 eval "$("$BREW" shellenv)"
 
-# --- 3. chezmoi ---------------------------------------------------------------
+# --- 4. chezmoi ---------------------------------------------------------------
 if command -v chezmoi >/dev/null 2>&1; then
 	log "chezmoi already installed ($(chezmoi --version | head -1))"
 else
@@ -72,7 +84,7 @@ else
 	brew install chezmoi
 fi
 
-# --- 4. Dotfiles --------------------------------------------------------------
+# --- 5. Dotfiles --------------------------------------------------------------
 # Three cases, all idempotent:
 #   a. chezmoi already initialized on this machine  -> chezmoi apply
 #   b. this script is running from inside a clone    -> init with that clone as
