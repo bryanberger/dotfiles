@@ -75,6 +75,16 @@ Commit and push with plain git. Run `sh scripts/check.sh` before pushing.
 - **Company-managed apps stay out of `packages.yaml`.** If Munki (Managed Software Center) installs Slack, Docker or Zoom, Homebrew must not also manage them. The `work` section is only for tools the company doesn't provide.
 - **Removed files linger.** chezmoi stops managing a deleted file but does not remove it from `~`. Clean up by hand on existing machines.
 
+## Work machines
+
+- Munki (Managed Software Center) owns Slack, Docker, Zoom and the like. They stay out of `packages.yaml`. Check `/Library/Managed Installs/ManagedInstallReport.plist` to see what it manages before adding anything to the `work` section.
+- Company tooling that writes to `.gitconfig` or `.zshrc` gets wiped by the next `chezmoi apply`. Move those lines to `~/.gitconfig.local` or `~/.zshrc.local` once; chezmoi never touches those. `chezmoi diff` shows what apply would remove.
+- If a company tool keeps rewriting `~/.gitconfig` on a schedule, stop managing it there: move the template to `dot_config/git/config` (git reads `~/.config/git/config` first, then `~/.gitconfig`, so the company file still wins where they overlap).
+
+## Ejecting
+
+chezmoi is a build step, not a runtime. Deployed files are plain copies, not symlinks. To detach a machine, stop running `chezmoi apply`; nothing else changes. To remove it fully, `chezmoi purge` deletes its config, state and source dir and leaves `~` untouched, then `brew uninstall chezmoi`. Homebrew packages, macOS defaults and mise stay; they are not chezmoi.
+
 ## Testing
 
 `scripts/check.sh` renders everything without touching the machine. For a real end-to-end run use a throwaway macOS VM; never test the bootstrap on a machine you care about.
