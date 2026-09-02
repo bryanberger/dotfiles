@@ -81,8 +81,6 @@ packages:
       taps: []
       brews:
         - just
-        # - pngquant
-        # - qpdf
       casks:
         - spotify
         - proton-mail
@@ -91,8 +89,8 @@ packages:
         - brave-browser
         - vlc
         - visual-studio-code
+        # - cursor
         # - claude-code
-        # --- occasional ---
         # - syncthing-app
         # - blender
         # - adobe-creative-cloud
@@ -111,7 +109,6 @@ packages:
         - gifski
       casks:
         - imageoptim
-        - cursor
         - figma
 
 # Not installable via Homebrew — install by hand on a new machine if wanted:

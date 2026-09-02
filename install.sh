@@ -129,9 +129,7 @@ fi
 
 log "Done."
 echo
-echo "Remaining manual steps:"
+echo "Remaining manual steps if needed:"
 echo "  - Sign in to 1Password, enable Settings > Developer > CLI integration"
 echo "  - Sign in to the App Store; install Xcode if you need it"
 echo "  - Log out and back in so all macOS defaults take effect"
-echo "  - Non-Homebrew apps are listed at the bottom of .chezmoidata/packages.yaml"
-echo "  - Machine-local shell config (employer tooling etc.) goes in ~/.zshrc.local"
