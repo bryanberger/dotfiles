@@ -61,7 +61,6 @@ packages:
         - cleanshot
         - alfred
         - obsidian
-        - visual-studio-code
         # - docker-desktop
         # - dbeaver-community
         # - ngrok
@@ -91,6 +90,7 @@ packages:
         - 1password-cli
         - brave-browser
         - vlc
+        - visual-studio-code
         # - claude-code
         # --- occasional ---
         # - syncthing-app
