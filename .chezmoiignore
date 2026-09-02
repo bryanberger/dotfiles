@@ -1,0 +1,10 @@
+# Repo-only files: never deployed to ~.
+README.md
+LICENSE
+.github
+scripts
+install.sh
+{{ if ne (get . "runtimes") "mise" }}
+.config/mise
+{{ end }}
+

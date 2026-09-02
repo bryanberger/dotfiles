@@ -1,0 +1,23 @@
+# Global runtime versions, managed by mise (https://mise.jdx.dev).
+# Only deployed on machines where `runtimes = "mise"` in ~/.config/chezmoi/chezmoi.toml
+# (see .chezmoiignore). A work machine whose company manages runtimes with its
+# own tool should use `runtimes = "none"` and never see this file.
+# Per-project versions go in a repo-local .mise.toml or the
+# .nvmrc/.node-version/.tool-versions files mise already understands.
+#
+# `mise use -g <tool>@<version>` edits this file in place — run `chezmoi re-add`
+# afterwards to pull the change back into the dotfiles repo.
+
+[tools]
+node = "lts"
+pnpm = "latest"
+python = "3.12"
+bun = "latest"
+go = "latest"
+
+# mise can also stand in for Homebrew on CLI tools that ship prebuilt binaries
+# (e.g. ripgrep, jq, gh), which keeps versions pinned per-project. Left to brew
+# here so there's one obvious owner per tool — move things down as you want them
+# version-pinned:
+# [tools]
+# "ubi:BurntSushi/ripgrep" = "latest"

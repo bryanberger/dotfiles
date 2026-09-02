@@ -1,0 +1,27 @@
+#!/bin/bash
+{{- template "assert-runtimes" . }}
+{{- if and (eq .chezmoi.os "darwin") (eq .runtimes "mise") }}
+set -euo pipefail
+
+# Installs mise from its own installer (not Homebrew, so the version isn't tied
+# to brew's update cadence) and materializes the runtimes in
+# ~/.config/mise/config.toml. Runs AFTER dotfiles land, so that config exists.
+#
+# Re-runs whenever the runtime list changes:
+# config hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
+
+MISE_BIN="$HOME/.local/bin/mise"
+
+if [ ! -x "$MISE_BIN" ]; then
+	echo "==> Installing mise"
+	curl -fsSL https://mise.run | sh
+else
+	echo "==> mise present, self-updating"
+	"$MISE_BIN" self-update --yes || true
+fi
+
+echo "==> Installing runtimes from ~/.config/mise/config.toml"
+"$MISE_BIN" install --yes
+
+"$MISE_BIN" current
+{{- end }}

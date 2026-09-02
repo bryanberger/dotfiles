@@ -1,0 +1,117 @@
+# Package list for a new macOS machine.
+#
+# Comment out anything you don't want on a fresh Mac;
+# `.chezmoiscripts/run_onchange_before_10-install-packages.sh.tmpl`
+# renders these lists into a Brewfile and runs `brew bundle`, so any edit here
+# re-triggers the install on the next `chezmoi apply`.
+#
+# PROFILES: a machine installs `common` PLUS the section matching its `profile`
+# (set in ~/.config/chezmoi/chezmoi.toml, prompted at `chezmoi init`). Anything
+# you'd want on every machine goes in `common`; anything that shouldn't touch a
+# work laptop goes in `personal`.
+#
+# Rules of thumb:
+#   - Only list things you'd install *deliberately*. Don't `brew bundle dump` —
+#     it pulls in every transitive dependency and the list rots.
+#   - Language runtimes (node, pnpm, python, bun, go) are NOT here; mise owns
+#     them, in dot_config/mise/config.toml.
+#   - `brew leaves` and `brew list --cask` on an existing Mac are how you find
+#     candidates to promote into this file.
+
+packages:
+  darwin:
+    ###########################################################################
+    # common — installed on every machine, work and personal alike
+    ###########################################################################
+    common:
+      taps: []
+        # - anomalyco/tap
+      brews:
+        # --- swift / apple platform work ---
+        - swiftlint
+        - xcodegen
+        # --- core: the machine is unusable to you without these ---
+        - git
+        - git-lfs
+        - gh
+        - lazygit
+        - neovim
+        - starship
+        - fzf
+        - ripgrep
+        - jq
+        - wget
+        - ffmpeg
+        # --- neovim support (treesitter parsers compile on demand) ---
+        - tree-sitter
+        - tree-sitter-cli
+        # --- occasional: uncomment on machines that need them ---
+        # - just
+        # - cmake          # only needed if you build neovim from source
+        # - dive           # docker image layer explorer
+        # - rclone
+        # - nmap
+        # - protobuf
+        # - anomalyco/tap/opencode
+        # - worktrunk
+      casks:
+        - ghostty
+        - font-geist-mono   # Ghostty font; Ghostty adds Nerd Font symbols itself
+        - rectangle
+        - cleanshot
+        - alfred
+        - obsidian
+        - visual-studio-code
+        # - docker-desktop
+        # - dbeaver-community
+        # - ngrok
+        # - google-chrome
+        # - firefox-developer-edition
+        # - linearmouse
+        # - figma
+        # - sourcetree
+        # - another-redis-desktop-manager
+        # - cyberduck
+        # - iterm2
+        # - wireshark-app
+
+    ###########################################################################
+    # personal — your own machines only; never installed on a work laptop
+    ###########################################################################
+    personal:
+      taps: []
+      brews:
+        - just
+        # - pngquant
+        # - qpdf
+      casks:
+        - spotify
+        - proton-mail
+        - 1password
+        - 1password-cli
+        - brave-browser
+        - vlc
+        # - claude-code
+        # --- occasional ---
+        # - syncthing-app
+        # - blender
+        # - adobe-creative-cloud
+
+    ###########################################################################
+    # work — the work laptop only. Employer-specific tooling goes here.
+    ###########################################################################
+    work:
+      taps: []
+      brews:
+        - imageoptim-cli
+        - gifsicle
+        - gifski
+      casks:
+        - imageoptim
+        - slack
+        - cursor
+        - figma
+        # - zoom
+
+# Not installable via Homebrew — install by hand on a new machine if wanted:
+#   Xcode (App Store), cmux, Screen Studio, VoiceInk, Discord, Sublime Text

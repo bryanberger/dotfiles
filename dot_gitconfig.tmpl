@@ -1,0 +1,73 @@
+{{- template "assert-profile" . -}}
+{{- template "assert-email" . -}}
+[user]
+	name = Bryan Berger
+	# No email is committed to this repo. Every machine supplies its own via
+	# ~/.config/chezmoi/chezmoi.toml [data], prompted at `chezmoi init`.
+	email = {{ .email }}
+	username = bryanberger
+
+[github]
+	user = bryanberger
+
+[core]
+	editor = nvim
+	excludesfile = ~/.gitignore
+	quotepath = false
+	pager = less -FRX
+	untrackedCache = true
+
+[init]
+	defaultBranch = main
+
+[color]
+	ui = true
+
+[push]
+	autoSetupRemote = true
+
+[fetch]
+	prune = true
+
+[checkout]
+	defaultRemote = origin
+
+[rerere]
+	enabled = true
+
+[diff]
+	algorithm = histogram
+
+[difftool]
+	prompt = false
+
+[mergetool]
+	prompt = false
+
+[rebase]
+	autosquash = true
+	autostash = true
+
+[help]
+	autocorrect = 1
+
+[credential]
+	helper = osxkeychain
+
+[feature]
+	manyFiles = true
+
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	unstage = reset HEAD --
+	prettylog = log --graph --decorate --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %C(bold blue)<%an>%Creset %Cgreen(%ad)' --abbrev-commit --date=default
+	lola = log --graph --decorate --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %C(bold blue)<%an>%Creset %Cgreen(%ad)' --abbrev-commit --all --date=relative
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true

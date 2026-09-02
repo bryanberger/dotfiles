@@ -1,0 +1,14 @@
+name: check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  render:
+    # macOS so the darwin-gated scripts actually render.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install chezmoi shellcheck
+      - run: sh scripts/check.sh

@@ -1,0 +1,8 @@
+{{- /* Shared guard for templates that branch on how this machine manages
+       language runtimes. Note that chezmoi's promptChoice validates interactive
+       answers but NOT values passed via --promptChoice, so an explicit check is
+       still required here. */ -}}
+{{- $runtimes := get . "runtimes" -}}
+{{- if not (has $runtimes (list "mise" "none")) -}}
+{{-   fail (printf "chezmoi: `runtimes` is %q, expected \"mise\" or \"none\".\nRun `chezmoi init` to set it, or add to ~/.config/chezmoi/chezmoi.toml:\n\n    [data]\n        runtimes = \"mise\"\n" $runtimes) -}}
+{{- end -}}

@@ -1,0 +1,65 @@
+# Interactive zsh. Kept deliberately small: every tool referenced here is in
+# .chezmoidata/packages.yaml, and anything machine-specific lives in
+# ~/.zshrc.local (sourced at the bottom, never committed).
+
+# --- Environment -------------------------------------------------------------
+export EDITOR="nvim"     # for GUI editors use e.g. "code --wait"
+export VISUAL="$EDITOR"
+export DO_NOT_TRACK=1    # opt out of CLI telemetry (consoledonottrack.com)
+export PATH="$HOME/.local/bin:$PATH"
+
+# --- History -----------------------------------------------------------------
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=50000
+setopt EXTENDED_HISTORY        # timestamp each entry
+setopt HIST_IGNORE_ALL_DUPS    # keep only the latest copy of a repeated command
+setopt HIST_IGNORE_SPACE       # a leading space keeps a command out of history
+setopt HIST_REDUCE_BLANKS
+setopt SHARE_HISTORY           # every open shell sees every other's commands
+
+# --- Options -----------------------------------------------------------------
+setopt AUTO_CD                 # `dir` == `cd dir`
+setopt INTERACTIVE_COMMENTS    # allow # comments at the prompt
+
+# --- Completion --------------------------------------------------------------
+# Homebrew installs completions for gh, chezmoi, git, etc. into site-functions.
+if command -v brew >/dev/null 2>&1; then
+	FPATH="$(brew --prefix)/share/zsh/site-functions:$FPATH"
+fi
+autoload -Uz compinit
+compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'   # case-insensitive
+
+# --- Runtimes ----------------------------------------------------------------
+{{ template "assert-runtimes" . -}}
+{{ if eq .runtimes "mise" -}}
+# node, pnpm, python, bun, go — versions in ~/.config/mise/config.toml.
+# mise reads .nvmrc / .node-version / .tool-versions natively, so no chpwd hook
+# is needed; it switches versions on directory change by itself.
+eval "$(mise activate zsh)"
+{{- else -}}
+# Deliberately unmanaged on this machine (`runtimes = "none"`). Whatever this
+# machine already uses — fnm, volta, asdf, Nix, a corporate toolchain — owns
+# node/python/go and sets up its own PATH. Flip to `runtimes = "mise"` in
+# ~/.config/chezmoi/chezmoi.toml to have mise manage them instead.
+{{- end }}
+
+# --- Tools -------------------------------------------------------------------
+# fzf: ctrl-r history search, ctrl-t file picker, alt-c cd.
+command -v fzf >/dev/null 2>&1 && source <(fzf --zsh)
+
+alias vim="nvim"
+alias lg="lazygit"
+alias pn="pnpm"
+alias ls="ls -G"
+alias ll="ls -lah"
+
+# --- Prompt ------------------------------------------------------------------
+eval "$(starship init zsh)"
+
+# --- Machine-local -----------------------------------------------------------
+# Employer tooling, service-account lookups, completions for private CLIs,
+# one-off PATH entries. Not managed by chezmoi, never committed.
+[ -f "$HOME/.zshrc.local" ] && . "$HOME/.zshrc.local"

@@ -1,0 +1,50 @@
+{{/* Generates ~/.config/chezmoi/chezmoi.toml on `chezmoi init`.
+
+     Each prompt defaults to this machine's current answer, so re-running
+     `chezmoi init` and pressing Enter three times changes nothing — and lets
+     you flip a setting without hand-editing the config.
+
+     Pre-answer non-interactively (no TTY needed):
+       chezmoi init --promptString profile=work \
+                    --promptString email=you@employer.com \
+                    --promptChoice runtimes=none <repo>
+
+     NOTE: deliberately NOT the prompt*Once functions. As of chezmoi v2.72.0
+     those ignore the --prompt* flags and always demand a TTY, which breaks
+     scripted bootstrap. */}}
+
+{{- /* profile — decides which packages install and which macOS defaults apply */ -}}
+{{- $profile := get . "profile" | default "personal" -}}
+{{- $profile = promptString "profile" $profile -}}
+{{- if not (has $profile (list "personal" "work")) -}}
+{{-   fail (printf "profile must be \"personal\" or \"work\", got %q" $profile) -}}
+{{- end -}}
+
+{{- /* email — no address is committed, personal or work. Each machine answers
+       for itself and the value lives only in this generated config, which is
+       not tracked. There is deliberately no default. */ -}}
+{{- $email := get . "email" | default "" -}}
+{{- $email = promptString "email" $email -}}
+{{- if not $email -}}
+{{-   fail "email must not be empty — this is the git identity for this machine" -}}
+{{- end -}}
+
+{{- /* runtimes — how node/pnpm/python/bun/go get installed on this machine.
+       "mise": these dotfiles install and activate mise.
+       "none": hands off entirely. Use this where something else already owns
+               runtimes — a work laptop on fnm/volta/asdf/Nix or a corporate
+               toolchain. .zshrc then activates nothing.
+       promptChoice validates interactive answers but not --promptChoice flag
+       values, hence the explicit check below. */ -}}
+{{- $runtimes := get . "runtimes" | default "mise" -}}
+{{- $runtimes = promptChoice "runtimes" (list "mise" "none") $runtimes -}}
+{{- if not (has $runtimes (list "mise" "none")) -}}
+{{-   fail (printf "runtimes must be \"mise\" or \"none\", got %q" $runtimes) -}}
+{{- end -}}
+
+sourceDir = {{ .chezmoi.sourceDir | quote }}
+
+[data]
+    profile = {{ $profile | quote }}
+    email = {{ $email | quote }}
+    runtimes = {{ $runtimes | quote }}

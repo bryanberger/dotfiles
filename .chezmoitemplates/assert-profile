@@ -1,0 +1,8 @@
+{{- /* Shared guard: every template that branches on the machine profile calls
+       {{ template "assert-profile" . }} first. Failing here is deliberate —
+       a missing profile must never silently resolve to a default, or a work
+       laptop quietly gets personal software. */ -}}
+{{- $profile := get . "profile" -}}
+{{- if not (has $profile (list "personal" "work")) -}}
+{{-   fail (printf "chezmoi: `profile` is %q, expected \"personal\" or \"work\".\nRun `chezmoi init` to set it, or add to ~/.config/chezmoi/chezmoi.toml:\n\n    [data]\n        profile = \"personal\"\n" $profile) -}}
+{{- end -}}

@@ -1,0 +1,23 @@
+"$schema" = "https://starship.rs/config-schema.json"
+
+[claude_context]
+format = "[$gauge $percentage]($style) [($input_tokens tok)](dimmed) "
+
+# Visible from 0% so the token count shows from the start of a session.
+[[claude_context.display]]
+threshold = 0.0
+style = "bold green"
+hidden = false
+
+[[claude_context.display]]
+threshold = 60.0
+style = "bold yellow"
+hidden = false
+
+[[claude_context.display]]
+threshold = 80.0
+style = "bold red"
+hidden = false
+
+[claude_cost]
+disabled = true

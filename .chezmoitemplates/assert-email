@@ -1,0 +1,7 @@
+{{- /* Shared guard for templates that embed the git identity. No email is
+       committed to this repo — every machine, personal and work alike, supplies
+       its own at `chezmoi init`. Failing here beats writing a gitconfig with an
+       empty user.email, which git only complains about later at commit time. */ -}}
+{{- if not (get . "email") -}}
+{{-   fail "chezmoi: `email` is not set.\nRun `chezmoi init` to be prompted, or add to ~/.config/chezmoi/chezmoi.toml:\n\n    [data]\n        email = \"you@example.com\"\n" -}}
+{{- end -}}

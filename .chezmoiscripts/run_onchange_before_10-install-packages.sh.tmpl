@@ -1,0 +1,39 @@
+#!/bin/bash
+{{- if eq .chezmoi.os "darwin" }}
+{{- template "assert-profile" . }}
+{{- $c := .packages.darwin.common }}
+{{- $p := index .packages.darwin .profile }}
+set -euo pipefail
+
+# Runs BEFORE chezmoi writes any dotfiles, so tools exist by the time configs
+# land. `run_onchange_` means this only re-runs when the rendered Brewfile below
+# changes — editing .chezmoidata/packages.yaml is what triggers it.
+#
+# The list below is `common` + the `{{ .profile }}` section, resolved at render
+# time. A machine with a different profile renders a different Brewfile and so
+# re-runs on its own schedule.
+#
+# Idempotent: `brew bundle` skips anything already installed.
+# Note: removing a package from packages.yaml does NOT uninstall it. chezmoi has
+# no concept of packages, only scripts. Uninstall by hand with `brew uninstall`.
+
+if ! command -v brew >/dev/null 2>&1; then
+	echo "==> Homebrew not found. Run install.sh first, then re-run: chezmoi apply" >&2
+	exit 0
+fi
+
+echo "==> Installing packages via brew bundle (profile: {{ .profile }})"
+brew bundle --file=/dev/stdin <<'BREWFILE'
+{{ range (concat ($c.taps | default list) ($p.taps | default list)) -}}
+tap "{{ . }}"
+{{ end }}
+{{- range (concat ($c.brews | default list) ($p.brews | default list)) -}}
+brew "{{ . }}"
+{{ end }}
+{{- range (concat ($c.casks | default list) ($p.casks | default list)) -}}
+cask "{{ . }}"
+{{ end -}}
+BREWFILE
+
+echo "==> Packages up to date"
+{{- end }}
