@@ -65,7 +65,7 @@ Commit and push with plain git. Run `sh scripts/check.sh` before pushing.
 - **Runtimes:** `mise use -g node@22` edits `~/.config/mise/config.toml`; `chezmoi re-add` brings it into the repo. On a machine with `runtimes = none` nothing here applies; use whatever the company provides.
 - **macOS defaults:** change it in System Settings, find the key with `defaults read <domain>`, add the line to `30-macos-defaults`. Some domains silently no-op on recent macOS; verify with `defaults read` after applying.
 - **A prompt answer:** edit `~/.config/chezmoi/chezmoi.toml`, or re-run `chezmoi init` (each prompt defaults to the current value), then `chezmoi apply`.
-- **Machine-specific shell config:** `~/.zshrc.local`, sourced at the end of `.zshrc` if it exists. Never committed.
+- **Machine-specific config:** `~/.zshrc.local` is sourced at the end of `.zshrc`, and `~/.gitconfig.local` is included at the end of `.gitconfig`, if they exist. Never committed. On a work Mac, move anything company tooling writes into `.gitconfig` or `.zshrc` there before running `chezmoi apply`, or apply will remove it.
 
 ## Rules
 

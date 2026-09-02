@@ -71,3 +71,9 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+
+# Machine-local overrides, never committed (work credential helpers, proxies,
+# whatever the company tooling writes). Last so it wins on any key both set.
+# Git skips it silently if the file does not exist.
+[include]
+	path = ~/.gitconfig.local
